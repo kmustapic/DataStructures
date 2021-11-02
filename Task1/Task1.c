@@ -9,29 +9,20 @@ Napomena: Svaki redak datoteke sadrzi ime i prezime studenta, te broj bodova na 
 relativan_br_bodova = br_bodova/max_br_bodova*100
 */
 
-#include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+#include "helpers/header.h"
+#include "helpers/functions.c"
+
 
 #define MAX_LENGTH 125
 
-typedef struct _student{
-    char name[50];
-    char surname[50];
-    double score;
-} Student;
-
-int countRows(char* fileName);
-Student* storeStudentsData(char* fileName, int rowsNum);
-double storeMaxScore(Student* students, int rowsNum);
-int compareDoubleNum(double a, double b);
-void printStudentsData(Student* students, int rowsNum, double maxScore);
-
-int main(){
+int main()
+{
 
     int rowsNum = countRows("./students.txt");
 
-    if(rowsNum <= 0){
+    if(rowsNum <= 0)
+    {
         printf("Empty file\n");
         return 0;
     }
@@ -42,97 +33,7 @@ int main(){
     free(students);
 
     return 0;
-    }
-
-
-
-int countRows(char* fileName){
-
-    int counter = 0;
-    FILE* p = fopen(fileName, "r");
-
-    if(p == NULL)
-    {
-        printf("Unable to open file.");
-        exit(-1);
-    }
-
-    char array[MAX_LENGTH];
-
-    while(!feof(p))
-    {
-        fgets(array, MAX_LENGTH, p);
-        counter++;
-    }
-
-    counter--;
-    fclose(p);
-
-    return counter;
 }
-
-
-
-Student* storeStudentsData(char* fileName, int rowsNum){
-
-    FILE* p = fopen(fileName, "r");
-
-    if(p == NULL)
-    {
-        printf("Unable to open file.");
-        exit(-1);
-    }
-
-    Student* students = (Student*)malloc(sizeof(Student) * rowsNum);
-
-    for(int i=0; i<rowsNum; i++)
-        fscanf(p,"%s %s %lf", students[i].name, students[i].surname, &students[i].score);
-
-    fclose(p);
-
-    return students;
-}
-
-
-
-double storeMaxScore(Student* students, int rowsNum){
-
-    double max = 0;
-
-    for(int i=0; i<rowsNum; i++)
-        if(!compareDoubleNum(students[i].score, max))
-            if(students[i].score > max)
-                max = students[i].score;
-
-    return max;
-}
-
-
-
-int compareDoubleNum(double a, double b){
-
-    if (abs(a - b) < 1e-9)
-        return 1;
-
-    else
-        return 0;
-}
-
-
-
-void printStudentsData(Student* students, int rowsNum, double maxScore){
-
-    printf("NAME\t SURNAME\t ABSOLUTE SCORE\t RELATIVE SCORE\n");
-
-    double relativeScore;
-
-    for(int i=0; i < rowsNum; i++){
-        relativeScore = students[i].score/ maxScore*100;
-        printf("%s\t %s\t\t %.2lf\t\t %.2lf\n", students[i].name, students[i].surname, students[i].score, relativeScore);
-    }
-}
-
-
 
 /*
     Tips & Tricks:
@@ -163,4 +64,16 @@ void printStudentsData(Student* students, int rowsNum, double maxScore){
 
         8) EXPLANATION solving point error "1.#J" in printout
             ( https://stackoverflow.com/questions/840081/what-does-floating-point-error-1-j-mean )
+
+        9) EXPLANATION Header files in C/C++ and its uses
+            ( https://www.tutorialspoint.com/cprogramming/c_header_files.htm )
+
+        10) EXPlANATION Why are #ifndef and #define used in C++ header files?
+            ( https://www.tutorialspoint.com/cprogramming/c_header_files.htm )
+
+        11) EXPLANATION for C Language: #endif Directive
+            ( https://www.techonthenet.com/c_language/directives/endif.php )
+
+        12) EXPLANATION How to include helper functions in C?
+            ( https://stackoverflow.com/questions/34120658/how-to-include-helper-functions-in-c )
 */
