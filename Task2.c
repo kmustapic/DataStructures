@@ -34,8 +34,8 @@ int startAtStart(Position head, char* name, char* surname, int birthYear);
 int insertAfterLast(Position head, char* name, char* surname, int birthYear);
 Position findLast(Position head);
 Position Find(Position first, char* surname)
-int Delete(Position head, Position pos);
-int ispis(poz prva);
+int delete(Position head, Position pos);
+int print(poz prva);
 
 
 int main(int argc, char** argv)
@@ -183,18 +183,18 @@ int delete(Position head, Position pos)
 
 
 
-int ispis(poz prva)
+int print(Position first)
 {
-    poz t = prva;
-    int br = 0;
-    printf("Vezana lista osoba:\n");
-	while (t)
+    Position temp = first;
+    int counter = 0;
+    printf("STUDENTS LIST":\n");
+	while (temp)
 	{
-		printf("Ime: %s, prezime: %s, godina: %d\n", t->ime, t->prezime, t->godina);
-		t = t->next;
-		br++;
+		printf("NAME: %s, SURNAME: %s, YEARS: %d\n", temp->name, t->surname, t->years);
+		temp = temp->next;
+		counter++;
 	}
-	if(br == 0)
-        printf("Lista je trenutno prazna\n");
+	if(counter == 0)
+        printf("List is empty\n");
 	return EXIT_SUCCESS;
 }
