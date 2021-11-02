@@ -3,36 +3,37 @@
 #include<string.h>
 #define N 50
 
-struct osoba;
-typedef struct osoba* poz;
-typedef struct osoba
+struct Person;
+typedef struct osoba* Position;
+typedef struct Person
 {
-    char ime[N];
-    char prezime[N];
-    int godina;
-    poz next;
-}osoba;
+    char name[N];
+    char surname[N];
+    int years;
+    Position next;
+}Person;
 
-int pocetak(poz head, char* ime, char* prezime, int godina);
-int dodajIza(poz head, char* ime, char* prezime, int godina, char* pozicija);
-int dodajIspred(poz head, char* ime, char* prezime, int godina, char* pozicija);
-poz stvoriOsobu(char* ime, char* prezime, int godina);
-int ispisi(poz head);
-int upisiDatoteku(poz head, FILE *f);
-int brisiSve(poz head);
-int unesiDatoteku(poz head, FILE *f);
-int sortiranje(poz head);
+int start( head, char* name, char* surname, int years);
+int addAfterChosen(Position head, char* name, char* surname, int years, char* pos);
+int addBefore(Position head, char* name, char* surname, int years, char* pos);
+Position createPerson(char* name, char* surname, int years);
+int print(Position head);
+int writeInDoc(Position head, FILE *f);
+int deleteAll(Position head);
+int insertDoc(Position head, FILE *f);
+int sort(Position head);
 
 
 int main(void)
 {
-    osoba head;
-    FILE *f = NULL;
-    FILE *u = NULL;
+    Person head;
 
-    f = fopen("studenti", "w");
-    u = fopen("unos.txt", "r");
-    if(u == NULL || f == NULL)
+    FILE *w = NULL;
+    FILE *r = NULL;
+
+    w = fopen("studenti", "w");
+    r = fopen("unos.txt", "r");
+    if(r == NULL || w == NULL)
         return 0;
     head.next = NULL;
 
@@ -68,43 +69,44 @@ int main(void)
     return 0;
 }
 
-int ispisi(poz head)
+int print(Position head)
 {
     while(head != NULL)
     {
-        printf("Ime: %s, Prezime: %s, Godina: %d\n", head->ime, head->prezime, head->godina);
+        printf("NAME: %s, SURNAME: %s, YEARS: %d\n", head->name, head->surname, head->years);
         head = head->next;
     }
     return EXIT_SUCCESS;
 }
 
-int pocetak(poz head, char* ime, char* prezime, int godina)
+int start(Position head, char* name, char* surname, int years)
 {
-    poz nova = NULL;
-    nova = (poz)malloc(sizeof(osoba));
-    if(!nova)
+    Position newPos = NULL;
+    newPos = (Position)malloc(sizeof(Person));
+    if(!newPos)
     {
-        perror("Memorija nije alocirana!");
+        perror("Memory not allocated!");
         return -1;
     }
-    nova = stvoriOsobu(ime, prezime, godina);
-    if(!nova)
+    newPos = createPerson(name, surname, years);
+    if(!newPos)
         return -1;
-    nova->next = head->next;
-    head->next = nova;
+    newPos->next = head->next;
+    head->next = newPos;
+
     return EXIT_SUCCESS;
 }
 
-int dodajIza(poz head,  char* ime, char* prezime, int godina, char* pozicija)
+int addAfterChosen(Position head,  char* name, char* surname, int years, char* pos)
 {
-    poz nova;
-    nova = stvoriOsobu(ime, prezime, godina);
+    Position newPos;
+    newPos = createPerson(name, surname, years);
     while(head->next != NULL)
     {
-        if(strcmp(head->prezime, pozicija) == 0)
+        if(strcmp(head->surname, pos) == 0)
         {
-            nova->next = head->next;
-            head->next = nova;
+            newPos->next = head->next;
+            head->next = newPos;
             break;
         }
         head = head->next;
@@ -112,29 +114,30 @@ int dodajIza(poz head,  char* ime, char* prezime, int godina, char* pozicija)
     return EXIT_SUCCESS;
 }
 
-poz stvoriOsobu(char* ime, char* prezime, int godina)
+Position createPerson(char* name, char* surname, int years)
 {
-    poz nova;
-    nova = (poz)malloc(sizeof(osoba));
-    strcpy(nova->ime, ime);
-    strcpy(nova->prezime, prezime);
-    nova->godina = godina;
-    nova->next = NULL;
-    return nova;
+    Position newPos;
+    newPos = (Position)malloc(sizeof(Person));
+    strcpy(newPos->name, name);
+    strcpy(newPos->surname, surname);
+    new->years = years;
+    newPos->next = NULL;
+
+    return newPos;
 }
 
 
-int dodajIspred(poz head, char* ime, char* prezime, int godina, char* pozicija)
+int addBefore(Position head, char* name, char* surname, int years, char* pos)
 {
-    poz nova;
-    nova = (poz)malloc(sizeof(osoba));
-    nova = stvoriOsobu(ime, prezime, godina);
+    Position newPos;
+    newPos = (Position)malloc(sizeof(Person));
+    newPos = createPerson(name, surname, years);
     while(head != NULL)
     {
-        if(strcmp(head->next->prezime, pozicija) == 0)
+        if(strcmp(head->next->surname, pos) == 0)
         {
-            nova->next = head->next;
-            head->next = nova;
+            newPos->next = head->next;
+            head->next = newPos;
             break;
         }
         head = head->next;
@@ -142,20 +145,20 @@ int dodajIspred(poz head, char* ime, char* prezime, int godina, char* pozicija)
     return EXIT_SUCCESS;
 }
 
-int upisiDatoteku(poz head, FILE *f)
+int insertDoc(Position head, FILE *f)
 {
     while(head != NULL)
     {
-        fprintf(f, "Ime: %s, Prezime: %s, Godina: %d\n", head->ime, head->prezime, head->godina);
+        fprintf(f, "NAME: %s, SURNAME: %s, YEARS: %d\n", head->name, head->surname, head->years);
         head = head->next;
     }
     return EXIT_SUCCESS;
 }
 
-int brisiSve(poz head)
+int deleteAll(Position head)
 {
-    poz q;
-    q = (poz)malloc(sizeof(osoba));
+    Position q;
+    q = (Position)malloc(sizeof(Person));
     while(head->next != NULL)
     {
         q = head->next;
@@ -166,47 +169,47 @@ int brisiSve(poz head)
 
 }
 
-int unesiDatoteku(poz head, FILE *f)
+int insertDoc(Position head, FILE *f)
 {
-    char ime[N];
-    char prezime[N];
-    int godina;
+    char name[N];
+    char surname[N];
+    int years;
 
     while(!feof(f))
     {
-        fscanf(f, "%s %s %d", ime, prezime, &godina);
-        pocetak(head, ime, prezime, godina);
+        fscanf(f, "%s %s %d", name, surname, &years);
+        p(head, name, surname, years);
     }
     return EXIT_SUCCESS;
 }
 
-int sortiranje(poz head)
+int sort(Position head)
 {
-    poz x = NULL;
-    poz prijex = NULL;
-    poz t = NULL;
-    poz end = NULL;
+    Position a = NULL;
+    Position beforea = NULL;
+    Position temp = NULL;
+    Position end = NULL;
 
 
     while(head->next != end)
     {
-        prijex = head;
-        x = head->next;
-        while(x->next != end)
+        beforea = head;
+        a = head->next;
+        while(a->next != end)
         {
-            if(strcmp(x->prezime, x->next->prezime) < 0)
+            if(strcmp(a->surname, a->next->surname) < 0)
             {
-                t = x->next;
-                prijex->next = t;
-                x->next = t->next;
-                t->next = x;
+                temp = a->next;
+                beforea->next = temp;
+                a->next = temp->next;
+                temp->next = a;
 
-                x = t;
+                a = t;
             }
-            prijex = x;
-            x = x->next;
+            beforea = a;
+            a = a->next;
         }
-        end = x;
+        end = a;
     }
 
 
