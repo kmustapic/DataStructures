@@ -38,12 +38,8 @@ int main(){
 
     Student* students = storeStudentsData("./students.txt", rowsNum);
     double maxScore = storeMaxScore(students, rowsNum);
-    // to fix -> false value of maxScore?
-    printf("MAXI:  %lf\n", maxScore);
-    //
-    printStudentsData(students, rowsNum, 5);
+    printStudentsData(students, rowsNum, maxScore);
     free(students);
-
 
     return 0;
     }
@@ -69,6 +65,7 @@ int countRows(char* fileName){
         counter++;
     }
 
+    counter--;
     fclose(p);
 
     return counter;
@@ -130,7 +127,7 @@ void printStudentsData(Student* students, int rowsNum, double maxScore){
     double relativeScore;
 
     for(int i=0; i < rowsNum; i++){
-        relativeScore = students[i].score/ maxScore;
+        relativeScore = students[i].score/ maxScore*100;
         printf("%s\t %s\t\t %.2lf\t\t %.2lf\n", students[i].name, students[i].surname, students[i].score, relativeScore);
     }
 }
