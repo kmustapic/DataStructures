@@ -46,6 +46,9 @@ int ReadFile(char* fileName, Position head1, Position head2)
 
 	fgets(buffer, MAX_LENGTH, fileName);
 	flag = ParseStringIntoList(buffer,head2);
+	//need to fix LOGICAL ERR in ParseStringIntoList!
+    printf("%s", buffer);
+    //
 	if (flag != EXIT_SUCCESS)
 	{
 		return EXIT_FAILURE;
