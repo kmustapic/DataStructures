@@ -1,0 +1,47 @@
+# depslib dependency file v1.0
+1639059358 source:c:\users\korisnik\desktop\task6\article.c
+	"article.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1639070739 c:\users\korisnik\desktop\task6\article.h
+	"errors.h"
+
+1638791676 c:\users\korisnik\desktop\task6\errors.h
+
+1638791809 source:c:\users\korisnik\desktop\task6\bill.c
+	"bill.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1638791781 c:\users\korisnik\desktop\task6\bill.h
+	"date.h"
+	"article.h"
+	"errors.h"
+
+1638791714 c:\users\korisnik\desktop\task6\date.h
+	"errors.h"
+	<stdbool.h>
+
+1638791747 source:c:\users\korisnik\desktop\task6\date.c
+	"date.h"
+	<stdio.h>
+	<stdlib.h>
+
+1638791641 source:c:\users\korisnik\desktop\task6\filter.c
+	"filter.h"
+	<stdio.h>
+	<stdlib.h>
+
+1638791607 c:\users\korisnik\desktop\task6\filter.h
+	"date.h"
+	"article.h"
+
+1639071015 source:c:\users\korisnik\desktop\task6\main.c
+	"bill.h"
+	"filter.h"
+	<stdio.h>
+	<stdlib.h>
+
