@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1639399708 source:c:\users\korisnik\desktop\datastructures\task_levelorder\functions.c
+	<stdio.h>
+	<stdlib.h>
+	"header.h"
+
+1639399425 c:\users\korisnik\desktop\datastructures\task_levelorder\header.h
+	<stdio.h>
+
