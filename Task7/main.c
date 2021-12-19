@@ -158,22 +158,12 @@ StackP PopDirFromStack(StackP stack)
 
 void CreateNewDir(char* dirName, DirectoryP p, DirectoryP currentDirP)
 {
-            scanf("%s", dirName);
-            p = (DirectoryP)malloc(sizeof(Directory));
-            strcpy(p->name, dirName);
-            p->sibling = NULL;
-            p->child = NULL;
-            currentDirP->child = AddNewDir(currentDirP->child, p);
-}
-
-DirectoryP GoToChildDir(char* dirName, int n, char* currentDir, DirectoryP currentDirP, StackP currentStack)
-{
-            scanf("%s", dirName);
-            n = strlen(currentDir);
-            currentDirP = FindChildDir(currentDirP, dirName, currentDir, n, currentStack);
-            currentStack = PushDirToStack(currentStack, currentDirP);
-
-            return currentDirP;
+    scanf("%s", dirName);
+    p = (DirectoryP)malloc(sizeof(Directory));
+    strcpy(p->name, dirName);
+    p->sibling = NULL;
+    p->child = NULL;
+    currentDirP->child = AddNewDir(currentDirP->child, p);
 }
 
 int main()
@@ -182,7 +172,7 @@ int main()
     Stack head = {.data = &dir, .next = NULL};
     char command[21], dirName[MAX_SIZE], currentDir[51];
     DirectoryP p, currentDirP = &dir;
-    StackP currentStack = &head;
+    StackP currentStackP = &head;
     int n,i;
 
     strcpy(currentDir, "");
@@ -204,19 +194,27 @@ int main()
         }
         else if(strcmp(command, "cd") == 0)
         {
-            //GoToChildDir -> need to create func with 2 returned values -> currentDirP and -> currentStack
+            /*
+                need to create appropriate declaration for function 'GoToChildDir'
+                that contains code lines below, inside this "if" case to perform action for
+                placing inside child directory ( "cd" )
+            */
             scanf("%s", dirName);
             n = strlen(currentDir);
-            currentDirP = FindChildDir(currentDirP, dirName, currentDir, n, currentStack);
-            currentStack = PushDirToStack(currentStack, currentDirP);
+            currentDirP = FindChildDir(currentDirP, dirName, currentDir, n, currentStackP);
+            currentStackP = PushDirToStack(currentStackP, currentDirP);
         }
         else if(strcmp(command, "cd..") == 0)
         {
-            //GoToParentDir
+            /*
+                need to create appropriate declaration for function 'GoToParentDir'
+                that contains code lines below, inside this "if" case to perform action for
+                placing inside parent directory ( "cd.." )
+            */
             if(currentDirP != &dir)
             {
-                currentStack = PopDirFromStack(currentStack);
-                currentDirP = PopDir(currentStack);
+                currentStackP = PopDirFromStack(currentStackP);
+                currentDirP = PopDir(currentStackP);
             }
 
             for(i = strlen(currentDir) - 2; i >= 0; i--)
