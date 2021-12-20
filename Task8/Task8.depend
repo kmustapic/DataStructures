@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1640011321 source:c:\users\korisnik\desktop\datastructures\task8\main.c
+	<stdio.h>
+	<stdlib.h>
+
