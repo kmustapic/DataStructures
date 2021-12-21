@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1640087478 source:c:\users\korisnik\desktop\datastructures\task9\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+
