@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-struct_node;
+struct _node;
 typedef struct _node *NodeP;
 typedef struct _node
 {

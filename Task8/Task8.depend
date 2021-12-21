@@ -1,5 +1,13 @@
 # depslib dependency file v1.0
-1640011321 source:c:\users\korisnik\desktop\datastructures\task8\main.c
+1640014642 source:c:\users\korisnik\desktop\datastructures\task8\main.c
 	<stdio.h>
 	<stdlib.h>
+
+1640014666 source:c:\users\korisnik\desktop\datastructures\task8\functions.c
+	<stdio.h>
+	<stdlib.h>
+	"header.h"
+
+1640037727 c:\users\korisnik\desktop\datastructures\task8\header.h
+	<stdio.h>
 
