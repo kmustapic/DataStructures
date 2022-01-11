@@ -1,10 +1,10 @@
 # depslib dependency file v1.0
-1641897357 source:c:\users\korisnik\desktop\datastructures\task10_a\task10_a.c
+1641897720 source:c:\users\korisnik\desktop\datastructures\task10_a\task10_a.c
 	<stdio.h>
 	<stdlib.h>
 	"header.h"
 
-1641897306 source:c:\users\korisnik\desktop\datastructures\task10_a\functions.c
+1641897732 source:c:\users\korisnik\desktop\datastructures\task10_a\functions.c
 	<stdio.h>
 	<stdlib.h>
 	"header.h"
