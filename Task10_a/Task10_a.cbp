@@ -39,6 +39,10 @@
 		<Unit filename="citiesHRV.txt" />
 		<Unit filename="citiesSE.txt" />
 		<Unit filename="countries.txt" />
+		<Unit filename="functions.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="header.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
