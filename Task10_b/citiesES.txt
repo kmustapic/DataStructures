@@ -3,4 +3,3 @@ Sevilla 695000
 Granada 242000
 Valencia 736000
 Barcelona 1454000
-

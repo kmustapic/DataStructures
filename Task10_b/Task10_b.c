@@ -25,7 +25,8 @@ struct _country
 CountryP AddCountryToTree(CountryP rootNode, char* countryName, char* citiesFileName);
 void AddCitiesToList(CityP currentCity,char* citiesFileName);
 int CompareCityData(CityP newCity, CityP nextCity);
-
+void PrintCountries(CountryP currentCountry);
+void PrintCities(CityP currentCity);
 
 CountryP AddCountryToTree(CountryP rootNode, char* countryName, char* citiesFileName)
 {
@@ -57,10 +58,8 @@ CountryP AddCountryToTree(CountryP rootNode, char* countryName, char* citiesFile
         newCountry->left = NULL;
         newCountry->right = NULL;
 
-        return rootNode;
-        }
-
-//check
+        return newCountry;
+    }
     else if(strcmp(rootNode->name, countryName) < 0)
     {
         rootNode->right = AddCountryToTree(rootNode->right, countryName, citiesFileName);
@@ -73,7 +72,7 @@ CountryP AddCountryToTree(CountryP rootNode, char* countryName, char* citiesFile
     return rootNode;
 }
 
-void AddCitiesToList(CityP currentCity, char* citiesFileName)
+void AddCitiesToList(CityP headCityEl, char* citiesFileName)
 {
     CityP newCity = NULL;
     FILE* fp = NULL;
@@ -81,8 +80,8 @@ void AddCitiesToList(CityP currentCity, char* citiesFileName)
     char buffer[MAX_SIZE];
     int numOfLines = 0;
     int population = 0;
-    CityP prevCity = currentCity;
-    CityP initialCity = currentCity;
+    CityP prevCity = headCityEl;
+    CityP initialCity = headCityEl;
 
     fp = fopen(citiesFileName, "r");
     if(fp == NULL)
@@ -90,7 +89,6 @@ void AddCitiesToList(CityP currentCity, char* citiesFileName)
         perror("File can't be opened!\n");
         return;
     }
-
     while(fgets(buffer, MAX_SIZE, fp))
     {
         numOfLines++;
@@ -98,6 +96,9 @@ void AddCitiesToList(CityP currentCity, char* citiesFileName)
     rewind(fp);
     for(int i = 0; i < numOfLines; i++)
     {
+        prevCity = initialCity;
+        headCityEl = initialCity;
+
         fscanf(fp, "%s %d", cityName, &population);
         newCity = (CityP)malloc(sizeof(City));
         if(newCity == NULL)
@@ -107,24 +108,45 @@ void AddCitiesToList(CityP currentCity, char* citiesFileName)
         }
         strcpy(newCity->name, cityName);
         newCity->population = population;
-        newCity->next = NULL;
 
-        while(currentCity != NULL)
+        /*
+        // Cities sorted: HIGHEST population -> LOWEST population
+        while(headCityEl != NULL)
         {
-            if(currentCity->next == NULL)
+            if(headCityEl->next == NULL)
             {
-                newCity->next = currentCity->next;
-                currentCity->next = newCity;
+                newCity->next = headCityEl->next;
+                headCityEl->next = newCity;
                 break;
             }
-            if(CompareCityData(newCity, prevCity->next) == -1)
+            if(CompareCityData(newCity, prevCity->next) == 1)
             {
                 newCity->next = prevCity->next;
                 prevCity->next = newCity;
                 break;
             }
-            prevCity = currentCity;
-            currentCity = currentCity->next;
+
+            prevCity = headCityEl;
+            headCityEl = headCityEl->next;
+        }
+        */
+
+        // Cities sorted: LOWEST population -> HIGHEST population
+        while(headCityEl != NULL)
+        {
+            if(headCityEl->next == NULL)
+            {
+                headCityEl->next = newCity;
+                newCity->next = NULL;
+                break;
+            }
+            if(CompareCityData(newCity, headCityEl->next->name) == -1)
+            {
+                newCity->next = headCityEl->next;
+                headCityEl->next = newCity;
+                break;
+            }
+            headCityEl = headCityEl->next;
         }
     }
     fclose(fp);
@@ -132,23 +154,23 @@ void AddCitiesToList(CityP currentCity, char* citiesFileName)
     return;
 }
 
-int CompareCityData(CityP newCity, CityP nextCity)
+int CompareCityData(CityP newCity, CityP existingCity)
 {
-    if(newCity->population > nextCity->population)
+    if(newCity->population > existingCity->population)
     {
         return 1;
     }
-    else if(newCity->population < nextCity->population)
+    else if(newCity->population < existingCity->population)
     {
         return -1;
     }
     else
     {
-        if(strcmp(newCity->name, nextCity->name) >= 0)
+        if(strcmp(newCity->name, existingCity->name) >= 0)
         {
             return 1;
         }
-        else if(strcmp(newCity->name, nextCity->name) < 0)
+        else if(strcmp(newCity->name, existingCity->name) < 0)
         {
             return -1;
         }
@@ -159,22 +181,14 @@ int CompareCityData(CityP newCity, CityP nextCity)
 
 void PrintCountries(CountryP currentCountry)
 {
-
     if(currentCountry == NULL)
     {
-        perror("List of countries is empty!\n");
         return;
     }
-printf("\nTEST\n");
-    printf("___________________________________________________________________\n");
-    printf("\t\tList of countries\n");
-    printf("___________________________________________________________________\n\n");
-
     PrintCountries(currentCountry->left);
-    printf("\t> %s\n", currentCountry->name);
+    printf("\n\t> %s\n", currentCountry->name);
     PrintCities(currentCountry->citiesP->next);
     PrintCountries(currentCountry->right);
-    printf("\n");
 
 }
 
@@ -186,7 +200,7 @@ void PrintCities(CityP currentCity)
     }
     while(currentCity != NULL)
     {
-        printf("\t\t|__ %s\t\n", currentCity->name, currentCity->population);
+        printf("\t\t|__ %s\t%10d\n", currentCity->name, currentCity->population);
         currentCity = currentCity->next;
     }
 }
@@ -200,7 +214,6 @@ int main()
     int numOfLines = 0;
     char buffer[MAX_SIZE];
 
-
     fp = fopen("countries.txt", "r");
     if(fp == NULL)
     {
@@ -211,6 +224,12 @@ int main()
     {
         numOfLines++;
     }
+    if(numOfLines-1 == 0)
+    {
+        perror("File that contains country names is empty!\n");
+        return EXIT_FAILURE;
+    }
+
     rewind(fp);
     for(int i = 0; i < numOfLines; i++)
     {
@@ -219,7 +238,11 @@ int main()
     }
     fclose(fp);
 
+    printf("___________________________________________________________________\n");
+    printf("\t\tList of countries\n");
+    printf("___________________________________________________________________\n");
     PrintCountries(rootNode);
+    printf("___________________________________________________________________\n");
 
 
     return EXIT_SUCCESS;

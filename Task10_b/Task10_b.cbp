@@ -31,6 +31,14 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="Task10_b.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="citiesES.txt" />
+		<Unit filename="citiesGER.txt" />
+		<Unit filename="citiesHRV.txt" />
+		<Unit filename="citiesSE.txt" />
+		<Unit filename="countries.txt" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
