@@ -27,6 +27,8 @@ void AddCitiesToList(CityP currentCity,char* citiesFileName);
 int CompareCityData(CityP newCity, CityP nextCity);
 void PrintCountries(CountryP currentCountry);
 void PrintCities(CityP currentCity);
+CountryP FindCountry(CountryP currentCountry, char* countryName);
+void FindCity(CountryP currentCountry, int minValue);
 
 CountryP AddCountryToTree(CountryP rootNode, char* countryName, char* citiesFileName)
 {
@@ -80,7 +82,7 @@ void AddCitiesToList(CityP headCityEl, char* citiesFileName)
     char buffer[MAX_SIZE];
     int numOfLines = 0;
     int population = 0;
-    CityP prevCity = headCityEl;
+    //CityP prevCity = headCityEl;
     CityP initialCity = headCityEl;
 
     fp = fopen(citiesFileName, "r");
@@ -96,7 +98,7 @@ void AddCitiesToList(CityP headCityEl, char* citiesFileName)
     rewind(fp);
     for(int i = 0; i < numOfLines; i++)
     {
-        prevCity = initialCity;
+        //prevCity = initialCity;
         headCityEl = initialCity;
 
         fscanf(fp, "%s %d", cityName, &population);
@@ -189,7 +191,6 @@ void PrintCountries(CountryP currentCountry)
     printf("\n\t> %s\n", currentCountry->name);
     PrintCities(currentCountry->citiesP->next);
     PrintCountries(currentCountry->right);
-
 }
 
 void PrintCities(CityP currentCity)
@@ -205,6 +206,56 @@ void PrintCities(CityP currentCity)
     }
 }
 
+CountryP FindCountry(CountryP currentCountry, char* countryName)
+{
+        if(currentCountry == NULL)
+        {
+            return NULL;
+        }
+        else if(strcmp(countryName, currentCountry->name) == 0)
+        {
+            return currentCountry;
+        }
+        else if(strcmp(countryName, currentCountry->name) < 0)
+        {
+            return FindCountry(currentCountry->left, countryName);
+        }
+        else if(strcmp(countryName, currentCountry->name) > 0)
+        {
+            return FindCountry(currentCountry->right, countryName);
+        }
+}
+
+void FindCity(CountryP currentCountry, int minValue)
+{
+    CityP currentCity = currentCountry->citiesP;
+    int flag = EXIT_FAILURE;
+
+    if(currentCity == NULL)
+    {
+        printf("In country %s none cities are enetered!\n");
+        return;
+    }
+    currentCity = currentCity->next;
+    while(currentCity != NULL)
+    {
+        if(currentCity->population >= minValue)
+        {
+            printf("\t\t|__ %s\t%10d\n", currentCity->name, currentCity->population);
+            flag = EXIT_SUCCESS;
+        }
+        else
+        {
+            break;
+        }
+        currentCity = currentCity->next;
+    }
+    if(flag == EXIT_FAILURE)
+    {
+        printf("Cities in %s that have population greater than %d are not entered yet!", currentCountry->name, minValue);
+    }
+}
+
 int main()
 {
     CountryP rootNode = NULL;
@@ -213,6 +264,8 @@ int main()
     char citiesFileName[MAX_SIZE];
     int numOfLines = 0;
     char buffer[MAX_SIZE];
+    CountryP foundCountry = NULL;
+    int minValue = 0;
 
     fp = fopen("countries.txt", "r");
     if(fp == NULL)
@@ -242,8 +295,30 @@ int main()
     printf("\t\tList of countries\n");
     printf("___________________________________________________________________\n");
     PrintCountries(rootNode);
-    printf("___________________________________________________________________\n");
 
+    printf("___________________________________________________________________\n");
+    printf("Enter country name that you want to search: ");
+    scanf("%s", countryName);
+    foundCountry = FindCountry(rootNode, countryName);
+    while(foundCountry == NULL)
+    {
+        printf("That country isn't entered in the text file yet!\nTry again :)\n");
+        sleep(3);
+        system("cls");
+        PrintCountries(rootNode);
+        printf("___________________________________________________________________\n");
+        printf("Enter country name that you want to search: ");
+        scanf("%s", countryName);
+        foundCountry = FindCountry(rootNode, countryName);
+    }
+
+    printf("___________________________________________________________________\n");
+    printf("Enter minimum population value in %s you want to check out:  ", countryName);
+    scanf("%d", &minValue);
+    printf("___________________________________________________________________\n");
+    printf("Cities in %s that have population more than %d habitants: \n\n", countryName, minValue);
+    FindCity(foundCountry, minValue);
+    printf("\n___________________________________________________________________\n");
 
     return EXIT_SUCCESS;
 }
