@@ -244,10 +244,6 @@ void FindCity(CountryP currentCountry, int minValue)
             printf("\t\t|__ %s\t%10d\n", currentCity->name, currentCity->population);
             flag = EXIT_SUCCESS;
         }
-        else
-        {
-            break;
-        }
         currentCity = currentCity->next;
     }
     if(flag == EXIT_FAILURE)
