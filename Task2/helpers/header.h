@@ -1,25 +1,24 @@
 #ifndef HEADERFILE_H
 #define HEADERFILE_H
 
-#define MAX_LENGTH 50
+#define MAX_SIZE 101
 
-struct Person;
-typedef struct Person* Position;
-typedef struct Person
+struct _person;
+typedef struct _person* PersonP;
+typedef struct _person
 {
-    char name[MAX_LENGTH];
-    char surname[MAX_LENGTH];
+    char name[MAX_SIZE];
+    char surname[MAX_SIZE];
     int birthYear;
-    Position next;
+    PersonP next;
 } Person;
 
-Position CreatePerson(char* name, char* surname, int birthYear);
-int InsertAfterChosen(Position pos, Position newPos);
-int StartAtStart(Position head, char* name, char* surname, int birthYear);
-int InsertAfterLast(Position head, char* name, char* surname, int birthYear);
-Position FindLast(Position head);
-Position Find(Position first, char* surname);
-int Delete(Position head, Position pos);
-int Print(Position first);
+void AddElToFront(PersonP headEl, char* name, char* surname, int birthYear);
+PersonP CreatePerson(char* name, char* surname, int birthyear);
+void PrintPersonList(PersonP currentPerson);
+void AddElAtEnd(PersonP headEl, char* name, char* surname, int birthYear);
+void DeleteEl(PersonP headEl, PersonP deletePerson);
+PersonP FindSurname(PersonP currentEl, char* surname);
+void ExecuteTask2();
 
 #endif

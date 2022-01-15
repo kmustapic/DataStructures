@@ -2,157 +2,149 @@
 #include <stdlib.h>
 #include <string.h>
 
-Position CreatePerson(char* name, char* surname, int birthyear)
+void AddElToFront(PersonP headEl, char* name, char* surname, int birthYear)
 {
-    Position newPos = NULL;
-    newPos = (Position)malloc(sizeof(Person));
-
-    if(!newPos)
+    PersonP newPerson = NULL;
+    newPerson = (PersonP)malloc(sizeof(Person));
+    if(!newPerson)
     {
-        perror("Can't allocate!\n");
-        return EXIT_FAILURE;
+        perror("Memory not allocated!\n");
+        return;
     }
-
-    strcpy(newPos->name, name);
-    strcpy(newPos->surname, surname);
-    newPos->birthYear = birthyear;
-    newPos->next = NULL;
-
-    return newPos;
+    newPerson = CreatePerson(name, surname, birthYear);
+    if(!newPerson)
+    {
+        perror("Memory not allocated!\n");
+        return;
+    }
+    newPerson->next = headEl->next;
+    headEl->next = newPerson;
 }
 
-
-
-int InsertAfterChosen(Position pos, Position newPos)
+PersonP CreatePerson(char* name, char* surname, int birthYear)
 {
-    newPos->next = pos->next;
-    pos->next = newPos;
+    PersonP newPerson = NULL;
+    newPerson = (PersonP)malloc(sizeof(Person));
+    if(!newPerson)
+    {
+        perror("Memory not allocated!\n");
+        return NULL;
+    }
+    strcpy(newPerson->name, name);
+    strcpy(newPerson->surname, surname);
+    newPerson->birthYear = birthYear;
+    newPerson->next = NULL;
 
-    return EXIT_SUCCESS;
+    return newPerson;
 }
 
-
-
-int StartAtStart(Position head, char* name, char* surname, int birthYear)
+void PrintPersonList(PersonP currentPerson)
 {
-    Position newPos = NULL;
-    newPos = (Position)malloc(sizeof(Person));
-    if(!newPos)
-    {
-        perror("Can't allocate!\n");
-        return EXIT_FAILURE;
-    }
-    newPos = CreatePerson(name, surname, birthYear);
-    if(!newPos)
-    {
-        return EXIT_FAILURE;
-    }
-    InsertAfterChosen(head, newPos);
+    int counter = 0;
 
-    return EXIT_SUCCESS;
+	while(currentPerson)
+	{
+	    if(counter == 0)
+        {
+            printf("\n> STUDENTS LIST:\n\n");
+            printf("\tNAME\t\tSURNAME\t\tBIRTH YEAR\n");
+        }
+		printf("\t%s\t\t%s\t\t%d\n", currentPerson->name, currentPerson->surname, currentPerson->birthYear);
+		currentPerson = currentPerson->next;
+		counter++;
+	}
+	if(counter == 0)
+    {
+         printf("\nList is empty!\n");
+    }
 }
 
-
-
-int InsertAfterCurrentLast(Position head, char* name, char* surname, int birthYear)
+void AddElAtEnd(PersonP headEl, char* name, char* surname, int birthYear)
 {
-  Position newPos = NULL;
-  Position last = NULL;
-
-  newPos = CreatePerson(name, surname, birthYear);
-  if(!newPos)
-  {
-      return EXIT_FAILURE;
-  }
-  InsertAfterChosen(last, newPos);
-
-  return EXIT_SUCCESS;
+    PersonP newPerson = NULL;
+    PersonP lastEl = headEl;
+    newPerson = (PersonP)malloc(sizeof(Person));
+    if(!newPerson)
+    {
+        perror("Memory not allocated!\n");
+        return;
+    }
+    newPerson = CreatePerson(name, surname, birthYear);
+    if(!newPerson)
+    {
+        perror("Memory not allocated!\n");
+        return;
+    }
+    while(lastEl->next != NULL)
+    {
+        lastEl = lastEl->next;
+    }
+    newPerson->next = lastEl->next;
+    lastEl->next = newPerson;
 }
 
-
-
-Position FindLast(Position head)
+void DeleteEl(PersonP headEl, PersonP deleteEl)
 {
-    Position temp = head;
-    while(temp->next != NULL)
+    if(deleteEl == NULL)
     {
-        temp = temp->next;
+        return;
     }
-
-    return temp;
+    while(headEl != NULL)
+    {
+        if(headEl->next == deleteEl)
+        {
+            headEl->next = deleteEl->next;
+        }
+        headEl = headEl->next;
+    }
 }
 
-
-
-int InsertAfterLast(Position Head, char* name, char* surname, int birthyear)
+PersonP FindSurname(PersonP currentEl, char* surname)
 {
-    Position newPosition = NULL;
-    Position last = NULL;
-
-    newPosition = CreatePerson(name, surname, birthyear);
-    if(!newPosition)
+    while(currentEl != NULL)
     {
-        return EXIT_FAILURE;
+        if(strcmp(surname, currentEl->surname) == 0)
+        {
+            return currentEl;
+        }
+        currentEl = currentEl->next;
     }
-    InsertAfterChosen(last, newPosition);
-
-    return EXIT_SUCCESS;
-}
-
-
-
-Position Find(Position first, char* surname)
-{
-    Position temp = first;
-    while(temp != NULL)
-    {
-        if(strcmp(temp->surname, surname) == 0)
-            return temp;
-        temp = temp->next;
-    }
+    printf("Person with surname %s is not enetered yet!\n", surname);
 
     return NULL;
 }
 
-
-
-int Delete(Position head, Position pos)
+void ExecuteTask2()
 {
-	Position temp = pos;
-	if(temp == NULL)
-    {
-        printf("Failed Argument Error\n");
-        return EXIT_FAILURE;
-    }
-	while (head != NULL)
-	{
-		if (head->next == temp)
-		{
-			head->next = temp->next;
-			free(pos);
-		}
-		head = head->next;
-	}
+    Person headEl;
+    PersonP deleteEl = NULL;
+    headEl.next = NULL;
 
-	return EXIT_SUCCESS;
-}
+    printf("\nAfter adding new list elements to BEGINNING:");
+    //AddElToFront(&headEl, "Ana", "Anic", 2003);
+    AddElToFront (&headEl, "Leo", "Stamen", 1999);
+    AddElToFront(&headEl, "Mia", "Dimsic", 2002);
+    //AddElToFront(&headEl, "Marko", "Novosel", 2000);
+    PrintPersonList(headEl.next);
 
+    printf("\n\nAfter adding new list elements at END:");
+    AddElAtEnd(&headEl, "Zarko", "Leko", 2007);
+    AddElAtEnd(&headEl, "Ena", "Enic", 2001);
+    PrintPersonList(headEl.next);
 
+    printf("\n\nAfter DELETING CERTAIN list elements:\n");
+    deleteEl = FindSurname(&headEl, "Gauffin");
+    DeleteEl(&headEl, deleteEl);
+    deleteEl = FindSurname(&headEl, "Dimsic");
+    DeleteEl(&headEl, deleteEl);
+    PrintPersonList(headEl.next);
 
-int Print(Position first)
-{
-    Position temp = first;
-    int counter = 0;
-
-    printf("STUDENTS LIST:\n");
-	while (temp)
-	{
-		printf("NAME: %s, SURNAME: %s, YEARS: %d\n", temp->name, temp->surname, temp->birthYear);
-		temp = temp->next;
-		counter++;
-	}
-	if(counter == 0)
-        printf("List is empty\n");
-
-	return EXIT_SUCCESS;
+    printf("\n\nAfter DELETING ALL list elements:\n");
+    deleteEl = FindSurname(&headEl, "Enic");
+    DeleteEl(&headEl, deleteEl);
+    deleteEl = FindSurname(&headEl, "Leko");
+    DeleteEl(&headEl, deleteEl);
+    deleteEl = FindSurname(&headEl, "Stamen");
+    DeleteEl(&headEl, deleteEl);
+    PrintPersonList(headEl.next);
 }
