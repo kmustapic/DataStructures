@@ -1,43 +1,43 @@
-/*
-
-FESB, Split - Racunarstvo (preddiplomski studij) - 3. semestar - Strukture podataka (120) - 2021/2022
-
-4) Napisati program za zbrajanje i množenje polinoma. Koeficijenti i eksponenti se
-čitaju iz datoteke.
-Napomena: Eksponenti u datoteci nisu nužno sortirani.
-
-*/
-#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-#include "components/helpers/header.h"
-#include "components/helpers/functions.c"
+#include <stdlib.h>
+#include "header.h"
+#include "functions.c"
 
 int main()
 {
-    Node head1 = { .coefficient = 0, .exponent = 0, .next = NULL };
-    Node head2 = { .coefficient = 0, .exponent = 0, .next = NULL };
-    Node sumResult = { .coefficient = 0, .exponent = 0, .next = NULL };
-    Node multiplicationResult = { .coefficient = 0, .exponent = 0, .next = NULL };
+    Polynomial headEl1 = {.coefficient = 0, .exponent = 0, .next = NULL};
+    Polynomial headEl2 = {.coefficient = 0, .exponent = 0, .next = NULL};
+    Polynomial sumResult = {.coefficient = 0, .exponent = 0, .next = NULL};
+    Polynomial multiplicationResult = {.coefficient = 0, .exponent = 0, .next = NULL};
 
-    char fileName[MAX_LENGTH] = {0};
-    EnterFileName(fileName);
+//
 
-    if(ReadFile(fileName, &head1, &head2) == EXIT_SUCCESS)
+//printf("\n%d\n", headEl1.coefficient);
+
+
+//printf("\nSUCCESS TEST\n");
+
+    if(ReadFile("polynomial.txt", &headEl1, &headEl2) == EXIT_SUCCESS)
     {
-        PrintPolynomial("1st polynomial: ", head1.next);
-        PrintPolynomial("2nd polynomial: ", head2.next);
+        printf("\n________________________________________________");
+        PrintPolynomials("\n1st polynomial: ", headEl1.next);
+        PrintPolynomials("\n2nd polynomial: ", headEl2.next);
+        printf("\n________________________________________________\n");
 
-        AddPolynomials(&head1, &head2, &sumResult);
-        MultiplyPolynomials(&head1, &head2, &multiplicationResult);
+        AddPolynomials(&headEl1, &headEl2, &sumResult);
+        PrintPolynomials("\nAddition result: ", sumResult.next);
 
-        PrintPolynomial("Addition: ", sumResult.next);
-        PrintPolynomial("Multiplication: ", multiplicationResult.next);
+        MultiplyPolynomials(&headEl1, &headEl2, &multiplicationResult);
+        PrintPolynomials("\nMultiplication: result", multiplicationResult.next);
 
-        FreeMemory(&head1);
-        FreeMemory(&head2);
+    /*
+        FreeMemory(&headEl1);
+        FreeMemory(&headEl2);
         FreeMemory(&sumResult);
         FreeMemory(&multiplicationResult);
+        */
     }
 
     return EXIT_SUCCESS;
 }
+
