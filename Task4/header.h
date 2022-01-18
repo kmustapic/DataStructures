@@ -12,14 +12,14 @@ typedef struct _polynomial
     PolynomialP next;
 } Polynomial;
 
-int ReadFile(char* fileName, PolynomialP headEl1, PolynomialP headEl2);
-int ParseStringIntoList(char* buffer, PolynomialP headEl);
+int ReadFile(char *fileName, PolynomialP headEl1, PolynomialP headEl2);
+int ParseStringIntoList(char *buffer, PolynomialP headEl);
 PolynomialP CreateEl(int coefficient, int exponent);
 int InsertSortedEl(PolynomialP headEl, PolynomialP newEl);
 int InsertAfterEl(PolynomialP headEl, PolynomialP newEl);
 int DeleteAfterEl(PolynomialP prevEl);
-void AddPolynomials(PolynomialP headEl1, PolynomialP headEl2, PolynomialP resultPolynomial);
-void MultiplyPolynomials(PolynomialP headEl1, PolynomialP headEl2, PolynomialP resultPolynomial);
-void PrintPolynomials(char* textToPrint, PolynomialP currentEl);
+int AddPolynomials(PolynomialP headEl1, PolynomialP headEl2, PolynomialP resultPolynomial);
+int MultiplyPolynomials(PolynomialP headEl1, PolynomialP headEl2, PolynomialP resultPolynomial);
+void PrintPolynomial(char *textToPrint, PolynomialP currentEl);
 
 #endif

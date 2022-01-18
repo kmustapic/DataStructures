@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "header.h"
 #include "functions.c"
 
 int main()
@@ -10,25 +7,33 @@ int main()
     Polynomial sumResult = {.coefficient = 0, .exponent = 0, .next = NULL};
     Polynomial multiplicationResult = {.coefficient = 0, .exponent = 0, .next = NULL};
 
-//
-
-//printf("\n%d\n", headEl1.coefficient);
-
-
-//printf("\nSUCCESS TEST\n");
-
     if(ReadFile("polynomial.txt", &headEl1, &headEl2) == EXIT_SUCCESS)
     {
         printf("\n________________________________________________");
-        PrintPolynomials("\n1st polynomial: ", headEl1.next);
-        PrintPolynomials("\n2nd polynomial: ", headEl2.next);
+        PrintPolynomial("\n 1st polynomial: ", &headEl1);
+        PrintPolynomial("\n 2nd polynomial: ", &headEl2);
         printf("\n________________________________________________\n");
 
-        AddPolynomials(&headEl1, &headEl2, &sumResult);
-        PrintPolynomials("\nAddition result: ", sumResult.next);
+        if(AddPolynomials(&headEl1, &headEl2, &sumResult) == EXIT_SUCCESS)
+        {
+            PrintPolynomial("\n> Addition result: ", &sumResult);
+        }
+        else
+        {
+            perror("Error in adding polynomials!\n");
+            return EXIT_FAILURE;
+        }
 
-        MultiplyPolynomials(&headEl1, &headEl2, &multiplicationResult);
-        PrintPolynomials("\nMultiplication: result", multiplicationResult.next);
+        if(MultiplyPolynomials(&headEl1, &headEl2, &multiplicationResult) == EXIT_SUCCESS)
+        {
+            PrintPolynomial("\n> Multiplication result: ", &multiplicationResult);
+        }
+        else
+        {
+            perror("Error in multiplying polynomials!\n");
+            return EXIT_FAILURE;
+        }
+
 
     /*
         FreeMemory(&headEl1);
@@ -36,6 +41,7 @@ int main()
         FreeMemory(&sumResult);
         FreeMemory(&multiplicationResult);
         */
+
     }
 
     return EXIT_SUCCESS;

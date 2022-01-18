@@ -3,12 +3,10 @@
 #include <string.h>
 #include "header.h"
 
-//printf("\nTEST\n");
-
-int ReadFile(char* fileName, PolynomialP headEl1, PolynomialP headEl2)
+int ReadFile(char *fileName, PolynomialP headEl1, PolynomialP headEl2)
 {
-    FILE* fp = NULL;
-    char buffer[MAX_SIZE] = {0};
+    FILE *fp = NULL;
+    char buffer[MAX_SIZE] = "";
     int flag = EXIT_SUCCESS;
 
     fp = fopen(fileName, "r");
@@ -17,11 +15,7 @@ int ReadFile(char* fileName, PolynomialP headEl1, PolynomialP headEl2)
         perror("Can't open file!\n");
         return  EXIT_FAILURE;
     }
-
-printf("\n1 TEST\n");
     fgets(buffer, MAX_SIZE, fp);
-printf("%s", buffer);
-//printf("\n2 TEST\n");
 	flag = ParseStringIntoList(buffer, headEl1);
 	if (flag != EXIT_SUCCESS)
 	{
@@ -31,8 +25,9 @@ printf("%s", buffer);
 	fgets(buffer, MAX_SIZE, fp);
 	flag = ParseStringIntoList(buffer,headEl2);
 //need to fix LOGICAL ERR in ParseStringIntoList!
-printf("%s", buffer);
-//
+printf("\nFINAL FLAG: %d\n", flag);
+//check below
+flag = EXIT_SUCCESS;
 	if (flag != EXIT_SUCCESS)
 	{
 		return EXIT_FAILURE;
@@ -43,32 +38,36 @@ printf("%s", buffer);
     return EXIT_SUCCESS;
 }
 
-int ParseStringIntoList(char* buffer, PolynomialP headEl)
+int ParseStringIntoList(char *buffer, PolynomialP headEl)
 {
+    //
+    int i = 0;
+    //
+
     int coefficient = 0;
     int exponent = 0;
     int flag = EXIT_SUCCESS;
     int numOfBytes = 0;
-    char* currentBuffer = buffer;
+    char *currentBuffer = buffer;
     PolynomialP newEl = NULL;
 
     while(strlen(currentBuffer) > 0)
     {
+
+//i++;
         flag = sscanf(currentBuffer, " %d %d %n", &coefficient, &exponent, &numOfBytes);
+    //printf("\n__%d__%d__%d\n", coefficient, exponent, numOfBytes);
+
         if(flag != 2 )
         {
-//
             printf("Invalid file format!\n");
             return EXIT_FAILURE;
         }
-//
         newEl = CreateEl(coefficient, exponent);
         if(!newEl)
         {
             return EXIT_FAILURE;
         }
-
-//
         InsertSortedEl(headEl, newEl);
         currentBuffer += numOfBytes;
     }
@@ -149,7 +148,7 @@ int DeleteAfterEl(PolynomialP prevEl)
     return EXIT_SUCCESS;
 }
 
-void AddPolynomials(PolynomialP headEl1, PolynomialP headEl2, PolynomialP resultPolynomial)
+int AddPolynomials(PolynomialP headEl1, PolynomialP headEl2, PolynomialP resultPolynomial)
 {
     PolynomialP newEl = NULL;
     newEl = (PolynomialP)malloc(sizeof(Polynomial));
@@ -161,7 +160,7 @@ void AddPolynomials(PolynomialP headEl1, PolynomialP headEl2, PolynomialP result
         if(!newEl)
         {
             printf("Element not created!\n");
-            return;
+            return EXIT_FAILURE;
         }
         InsertSortedEl(resultPolynomial, newEl);
         headEl1 = headEl1->next;
@@ -172,14 +171,14 @@ void AddPolynomials(PolynomialP headEl1, PolynomialP headEl2, PolynomialP result
         if(!newEl)
         {
             printf("Element not created!\n");
-            return;
+            return EXIT_FAILURE;
         }
         InsertSortedEl(resultPolynomial, newEl);
         headEl2 = headEl2->next;
     }
 }
 
-void MultiplyPolynomials(PolynomialP headEl1, PolynomialP headEl2, PolynomialP resultPolynomial)
+int MultiplyPolynomials(PolynomialP headEl1, PolynomialP headEl2, PolynomialP resultPolynomial)
 {
     int coefficient = 0, exponent = 0;
     PolynomialP i = NULL, j = NULL;
@@ -191,7 +190,7 @@ void MultiplyPolynomials(PolynomialP headEl1, PolynomialP headEl2, PolynomialP r
 
     if(headEl1->next == NULL || headEl2->next == NULL)
     {
-        return;
+        return EXIT_FAILURE;
     }
     for(i = headEl1->next;i;i=i->next)
     {
@@ -203,15 +202,16 @@ void MultiplyPolynomials(PolynomialP headEl1, PolynomialP headEl2, PolynomialP r
             if(!newEl)
             {
                 printf("Element not created!\n");
-                return;
+                return EXIT_FAILURE;
             }
             InsertSortedEl(resultPolynomial, newEl);
         }
     }
+    return EXIT_SUCCESS;
 }
 
 //
-void PrintPolynomials(char* textToPrint, PolynomialP currentEl)
+void PrintPolynomial(char* textToPrint, PolynomialP currentEl)
 {
     PolynomialP i = NULL;
     i = (PolynomialP)malloc(sizeof(Polynomial));
@@ -224,14 +224,14 @@ void PrintPolynomials(char* textToPrint, PolynomialP currentEl)
     if(currentEl->next == NULL);
     {
         printf("0");
-        return;
+
     }
 
     for(i = currentEl->next;i != NULL;i=i->next)
     {
-        if(i->coefficient != 1 && i->coefficient)
+        if(i->coefficient != 1 || i->exponent == 0)
         {
-            if(i->coefficient >= 0)
+            if(i->coefficient > 0)
             {
                 printf("%d", i->coefficient);
             }
@@ -244,11 +244,11 @@ void PrintPolynomials(char* textToPrint, PolynomialP currentEl)
         {
             printf("x^%d", i->exponent);
         }
-        else if(i->exponent < 0)
+        if(i->exponent < 0)
         {
             printf("x^(%d)", i->exponent);
         }
-        else
+        if(i->next != NULL)
         {
             printf(" + ");
         }
