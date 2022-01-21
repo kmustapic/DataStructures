@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1642760846 source:c:\users\korisnik\desktop\datastructures\task11\task11.c
+	<stdio.h>
+	<stdlib.h>
+	"header.h"
+
+1642763123 c:\users\korisnik\desktop\datastructures\task11\header.h
+	<stdio.h>
+
